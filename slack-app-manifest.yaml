@@ -1,0 +1,74 @@
+# ── Astronasamp — Slack App Manifest ─────────────────────────
+# Create the whole app in one step instead of hand-adding commands:
+#   1. https://api.slack.com/apps  →  "Create New App"  →  "From a manifest"
+#   2. Pick your workspace, paste this file, create.
+#   3. Install to workspace, then copy the Bot Token (xoxb-) into .env.
+#   4. Basic Information → App-Level Tokens → generate a token with
+#      "connections:write" → copy it (xapp-) into .env.
+#
+# Socket Mode is enabled, so none of the slash commands need a public URL.
+
+display_information:
+  name: Astronasamp
+  description: A polished multi-API utility bot — weather, currency, crypto, definitions, and more.
+  background_color: "#0b1d3a"
+
+features:
+  bot_user:
+    display_name: astronasamp
+    always_online: true
+  app_home:
+    home_tab_enabled: true
+    messages_tab_enabled: false
+  slash_commands:
+    - command: /astronasamp
+      description: Astronasamp command hub — try "/astronasamp help"
+      usage_hint: "help | weather <city> | convert 100 CAD USD | crypto btc | define <word>"
+      should_escape: false
+    - command: /astronasamp-ping
+      description: Health check
+      should_escape: false
+    - command: /astronasamp-help
+      description: Show the command directory
+      should_escape: false
+    - command: /astronasamp-weather
+      description: Current weather for a city
+      usage_hint: "<city>"
+      should_escape: false
+    - command: /astronasamp-convert
+      description: Convert currency
+      usage_hint: "<amount> <FROM> <TO>"
+      should_escape: false
+    - command: /astronasamp-crypto
+      description: Live crypto price
+      usage_hint: "<coin>"
+      should_escape: false
+    - command: /astronasamp-define
+      description: Dictionary definition
+      usage_hint: "<word>"
+      should_escape: false
+    - command: /astronasamp-quote
+      description: Inspirational quote
+      should_escape: false
+    - command: /astronasamp-joke
+      description: A random joke
+      should_escape: false
+    - command: /astronasamp-cat
+      description: A random cat fact
+      should_escape: false
+
+oauth_config:
+  scopes:
+    bot:
+      - commands
+      - chat:write
+
+settings:
+  event_subscriptions:
+    bot_events:
+      - app_home_opened
+  interactivity:
+    is_enabled: true
+  socket_mode_enabled: true
+  org_deploy_enabled: false
+  token_rotation_enabled: false
