@@ -6,6 +6,10 @@ The bot uses several external APIs in order to get real-time data such as weathe
 
 The bot operates in Slack Socket Mode, which means that it does not require a public web server or inbound ports. All it requires is an internet connection.
 
+![Bot in action](screenshots/bot-reply.png)
+
+*Bot in action*
+
 ## Features
 
 - A single command interface based on /astronasamp
@@ -19,6 +23,10 @@ The bot operates in Slack Socket Mode, which means that it does not require a pu
 - Facts about cats
 - Help command that lists all features
 - Formatted messages on Slack
+
+![App Home dashboard](screenshots/app-home.png)
+
+*App Home dashboard*
 
 ## Commands
 
@@ -48,6 +56,10 @@ Shows a random joke
 
 /astronasamp cat
 Shows a random cat fact
+
+![Help menu and command replies](screenshots/help-command.png)
+
+*Help menu and replies*
 
 ## Examples
 
@@ -95,6 +107,10 @@ After that type in Slack
 5. Create App Level Token with connections write scope
 6. Put it in SLACK_APP_TOKEN
 7. Start the bot
+
+![Slash command setup](screenshots/slash-setup.png)
+
+*Slash command setup*
 
 ## Deployment
 
@@ -152,6 +168,10 @@ The command will be automatically added to the bot
 Run this command to test all features
 
 npm run smoke        - This is basically a quick shortcut to check your features
+
+![Command tests](screenshots/testing.png)
+
+*Command tests*
 
 ## Security
 
