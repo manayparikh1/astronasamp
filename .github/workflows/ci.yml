@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate command registry loads
+        run: node -e "const r=require('./src/registry'); if(r.unique().length<10){console.error('expected >=10 commands, got',r.unique().length);process.exit(1)} console.log('registry ok:',r.unique().length,'commands')"
