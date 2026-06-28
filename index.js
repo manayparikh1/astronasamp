@@ -1,4 +1,5 @@
 require("dotenv").config();
+const express = require("express");
 const { App } = require("@slack/bolt");
 const logger = require("./src/lib/logger");
 const registry = require("./src/registry");
@@ -94,6 +95,19 @@ app.event("app_home_opened", async ({ event, client }) => {
   logger.info("astronasamp is running!", { commands: registry.unique().length });
   console.log("astronasamp is running!");
 })();
+
+// ──────────────────────────────────────────────
+//  6b. Tiny HTTP keep-alive server.
+//      Socket Mode needs no inbound port, but many hosts
+//      expect an open PORT to consider the service healthy,
+//      and uptime pingers can hit "/" to keep it awake.
+// ──────────────────────────────────────────────
+const web = express();
+web.get("/", (req, res) => res.send("Bot is running"));
+web.listen(process.env.PORT || 3000, () => {
+  logger.info("keep-alive server listening", { port: process.env.PORT || 3000 });
+  console.log("Server running on port", process.env.PORT || 3000);
+});
 
 for (const sig of ["SIGINT", "SIGTERM"]) {
   process.on(sig, async () => {
