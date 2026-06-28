@@ -63,4 +63,4 @@ console.log(`Passed: ${pass}`);
 console.log(`Failed: ${fail}`);
 console.log(`Success rate: ${((pass / cases.length) * 100).toFixed(2)}%`);
 console.log(`Total runtime: ${duration}ms`);
-console.log("=== = = = = = = = = === == == == == ========\n");
+console.log("=\n");
