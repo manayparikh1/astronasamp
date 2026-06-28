@@ -42,3 +42,6 @@ const ROUNDS = 5; // 12 commands * 5 = 60 concurrent calls
   console.log(`\nFired ${tasks.length} concurrent commands → ${ok} ok, ${bad} failed`);
   process.exit(bad ? 1 : 0);
 })();
+
+const successRate = (ok / tasks.length) * 100;
+console.log(`Success rate: ${successRate.toFixed(2)}%`);
