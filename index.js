@@ -104,6 +104,7 @@ app.event("app_home_opened", async ({ event, client }) => {
 // ──────────────────────────────────────────────
 const web = express();
 web.get("/", (req, res) => res.send("Bot is running"));
+web.get("/healthz", (req, res) => res.json({ status: "ok", commands: registry.unique().length }));
 web.listen(process.env.PORT || 3000, () => {
   logger.info("keep-alive server listening", { port: process.env.PORT || 3000 });
   console.log("Server running on port", process.env.PORT || 3000);
