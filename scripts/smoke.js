@@ -31,6 +31,7 @@ function preview(arg) {
 }
 
 (async () => {
+  const start = Date.now();
   let pass = 0;
   let fail = 0;
   for (const [name, args] of cases) {
@@ -52,15 +53,13 @@ function preview(arg) {
       console.log(`❌ ${name} ${args.join(" ")} → ERROR ${err.message}`);
     }
   }
-  console.log(`\n${pass} passed, ${fail} failed`);
+  const duration = Date.now() - start;
+  console.log("\n=== Test report ===");
+  console.log(`Total tests:  ${cases.length}`);
+  console.log(`Passed:       ${pass}`);
+  console.log(`Failed:       ${fail}`);
+  console.log(`Success rate: ${((pass / cases.length) * 100).toFixed(2)}%`);
+  console.log(`Total runtime: ${duration}ms`);
+  console.log("===================\n");
   process.exit(fail ? 1 : 0);
 })();
-
-const duration = Date.now() - start;
-console.log("\n=This is basically a summer for the test, for example the real test report now will include total test count, pass/fail breakdown, success percentage, run time, and overall it will generate a clean formatted response that will get outputted as you can see below=");
-console.log(`Total tests: ${cases.length}`);
-console.log(`Passed: ${pass}`);
-console.log(`Failed: ${fail}`);
-console.log(`Success rate: ${((pass / cases.length) * 100).toFixed(2)}%`);
-console.log(`Total runtime: ${duration}ms`);
-console.log("=\n");
