@@ -14,6 +14,8 @@ const cases = [
   ["quote", []],
   ["joke", []],
   ["cat", []],
+  ["poll", ["Best language?", "|", "JavaScript", "|", "Python"]],
+  ["poll", ["missing options"]], // usage-guard path
   ["weather", []], // usage-guard path
   ["crypto", ["notacoin"]] // not-found path
 ];

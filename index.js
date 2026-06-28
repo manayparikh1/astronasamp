@@ -63,6 +63,23 @@ for (const cmd of registry.unique()) {
 }
 
 // ──────────────────────────────────────────────
+//  4b. Interactive components (buttons, etc.)
+//      Commands may expose { actionPattern, onAction }.
+// ──────────────────────────────────────────────
+for (const cmd of registry.unique()) {
+  if (cmd.actionPattern && typeof cmd.onAction === "function") {
+    app.action(cmd.actionPattern, async (ctx) => {
+      try {
+        await cmd.onAction(ctx);
+      } catch (err) {
+        logger.error("action failed", { command: cmd.name, error: err.message });
+        try { await ctx.ack(); } catch (e) { /* already acked */ }
+      }
+    });
+  }
+}
+
+// ──────────────────────────────────────────────
 //  5. App Home dashboard
 // ──────────────────────────────────────────────
 app.event("app_home_opened", async ({ event, client }) => {

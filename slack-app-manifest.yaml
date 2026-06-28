@@ -50,6 +50,10 @@ features:
     - command: /astronasamp-quote
       description: Inspirational quote
       should_escape: false
+    - command: /astronasamp-poll
+      description: Create a live poll with voting buttons
+      usage_hint: "<question> | <option 1> | <option 2>"
+      should_escape: false
     - command: /astronasamp-joke
       description: A random joke
       should_escape: false
