@@ -21,6 +21,7 @@ The bot operates in Slack Socket Mode, which means that it does not require a pu
 - Definitions of words
 - Jokes and quotations in random order
 - Facts about cats
+- Live polls with voting buttons
 - Help command that lists all features
 - Formatted messages on Slack
 
@@ -30,6 +31,7 @@ The bot operates in Slack Socket Mode, which means that it does not require a pu
 
 ## Commands
 
+```
 /astronasamp help
 Shows all available commands
 
@@ -57,16 +59,23 @@ Shows a random joke
 /astronasamp cat
 Shows a random cat fact
 
+/astronasamp poll <question> | <option 1> | <option 2>
+Creates a live poll with voting buttons
+```
+
 ![Help menu and command replies](screenshots/help-command.png)
 
 *Help menu and replies*
 
 ## Examples
 
+```
 /astronasamp weather Toronto
 /astronasamp convert 100 CAD USD
 /astronasamp crypto btc
 /astronasamp define serendipity
+/astronasamp poll Best language? | JavaScript | Python | Go
+```
 
 ## APIs that were used throughout the process
 
@@ -85,18 +94,30 @@ All APIs are free and don't need keys at all
 You will require Node.js 18 or above
 
 Installing dependencies
+
+```bash
 npm install
+```
 
 Creating environment file
+
+```bash
 cp .env.example .env
+```
 
 Adding Slack tokens to .env file
 
 Running the bot
+
+```bash
 npm start
+```
 
 After that type in Slack
+
+```
 /astronasamp help
+```
 
 ## Setting up Slack
 
@@ -118,32 +139,42 @@ Bot works using Socket Mode and is a background service
 
 ### Docker configuration
 
+```bash
 docker build -t astronasamp .
 docker run -d --restart=unless-stopped --env-file .env astronasamp
+```
 
 Alternative platforms like Railway or Render can also be used
 
 Variables to set
+
+```
 SLACK_BOT_TOKEN
 SLACK_APP_TOKEN
+```
 
 Command for startup
+
+```bash
 node index.js
+```
 
 ## Project structure
 
+```
 astronasamp
-index.js
-src
-commands
-lib
-registry.js
-home.js
-scripts
-smoke.js
-slack-app-manifest.yaml
-Dockerfile
-.env.example
+├── index.js
+├── src
+│   ├── commands
+│   ├── lib
+│   ├── registry.js
+│   └── home.js
+├── scripts
+│   └── smoke.js
+├── slack-app-manifest.yaml
+├── Dockerfile
+└── .env.example
+```
 
 ## Adding a new command
 
@@ -151,15 +182,17 @@ Create a new file inside src/commands
 
 Example
 
+```js
 module.exports = {
-name: "echo",
-category: "fun",
-summary: "Repeats what the user says",
-usage: "/astronasamp echo <text>",
-run: async ({ args, respond }) => {
-await respond(args.join(" "))
+  name: "echo",
+  category: "fun",
+  summary: "Repeats what the user says",
+  usage: "/astronasamp echo <text>",
+  run: async ({ args, respond }) => {
+    await respond(args.join(" "))
+  }
 }
-}
+```
 
 The command will be automatically added to the bot
 
@@ -167,11 +200,15 @@ The command will be automatically added to the bot
 
 Run this command to test all features
 
-npm run smoke        - This is basically a quick shortcut to check your features
+```bash
+npm run smoke        # a quick shortcut to check your features
+```
 
-![Command tests](screenshots/testing.png)
+There is also a stress test that fires many commands at once to confirm the bot stays stable under load
 
-*Command tests*
+```bash
+node scripts/stress.js
+```
 
 ## Security
 
