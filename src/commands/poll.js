@@ -52,15 +52,26 @@ module.exports = {
   },
 
   // Interactivity: every vote button matches this and updates the message live.
+  // Uses client.chat.update (not respond/response_url) because response_url
+  // is capped at 5 uses per 30 minutes - a poll with more than a few votes
+  // would silently stop updating once that cap was hit.
   actionPattern: /^poll_vote_\d+$/,
-  onAction: async ({ ack, body, action, respond }) => {
+  onAction: async ({ ack, body, action, client }) => {
     await ack();
     const [id, idx] = action.value.split(":");
     const poll = toggleVote(id, Number(idx), body.user.id);
     if (!poll) {
-      await respond({ replace_original: false, text: ":hourglass: This poll is no longer active." });
+      await client.chat.postEphemeral({
+        channel: body.channel.id,
+        user: body.user.id,
+        text: ":hourglass: This poll is no longer active."
+      });
       return;
     }
-    await respond({ replace_original: true, response_type: "in_channel", blocks: renderPoll(id, poll) });
+    await client.chat.update({
+      channel: body.channel.id,
+      ts: body.message.ts,
+      blocks: renderPoll(id, poll)
+    });
   }
 };
