@@ -1,14 +1,11 @@
 require("dotenv").config();
-const express = require("express");
 const { App } = require("@slack/bolt");
 const logger = require("./src/lib/logger");
 const registry = require("./src/registry");
 const { errorCard } = require("./src/lib/blocks");
 const { publishHome } = require("./src/home");
 
-// ──────────────────────────────────────────────
-//  1. Validate environment up front (fail fast)
-// ──────────────────────────────────────────────
+//  1. make sure the environment up front is good (should not fail fast)
 const required = ["SLACK_BOT_TOKEN", "SLACK_APP_TOKEN"];
 const missing = required.filter((k) => !process.env[k]);
 if (missing.length) {
@@ -22,9 +19,7 @@ const app = new App({
   socketMode: true
 });
 
-// ──────────────────────────────────────────────
-//  2. Single error boundary for every command
-// ──────────────────────────────────────────────
+//  2. one error boundary for every command
 async function execute(cmd, ctx) {
   const start = Date.now();
   try {
@@ -38,10 +33,7 @@ async function execute(cmd, ctx) {
   }
 }
 
-// ──────────────────────────────────────────────
 //  3. Primary interface: one namespaced command
-//     /astronasamp <subcommand> [args...]
-// ──────────────────────────────────────────────
 app.command("/astronasamp", async ({ command, ack, respond, client }) => {
   await ack();
   const text = (command.text || "").trim();
@@ -50,11 +42,7 @@ app.command("/astronasamp", async ({ command, ack, respond, client }) => {
   await execute(cmd, { args: rest, respond, client, registry, userId: command.user_id });
 });
 
-// ──────────────────────────────────────────────
 //  4. Backwards-compatible individual commands
-//     (/astronasamp-ping, -help, -cat, -joke …)
-//     so anything already registered in Slack keeps working.
-// ──────────────────────────────────────────────
 for (const cmd of registry.unique()) {
   app.command(`/astronasamp-${cmd.name}`, async ({ command, ack, respond, client }) => {
     await ack();
@@ -63,10 +51,7 @@ for (const cmd of registry.unique()) {
   });
 }
 
-// ──────────────────────────────────────────────
 //  4b. Interactive components (buttons, etc.)
-//      Commands may expose { actionPattern, onAction }.
-// ──────────────────────────────────────────────
 for (const cmd of registry.unique()) {
   if (cmd.actionPattern && typeof cmd.onAction === "function") {
     app.action(cmd.actionPattern, async (ctx) => {
@@ -80,35 +65,17 @@ for (const cmd of registry.unique()) {
   }
 }
 
-// ──────────────────────────────────────────────
-//  5. App Home dashboard
-// ──────────────────────────────────────────────
+//  5. The dashboard
 app.event("app_home_opened", async ({ event, client }) => {
   await publishHome(client, event.user, registry, logger);
 });
 
-// ──────────────────────────────────────────────
-//  6. Launch + graceful shutdown
-// ──────────────────────────────────────────────
+//  6. Launch shutdown
 (async () => {
   await app.start();
   logger.info("astronasamp is running!", { commands: registry.unique().length });
   console.log("astronasamp is running!");
 })();
-
-// ──────────────────────────────────────────────
-//  6b. Tiny HTTP keep-alive server.
-//      Socket Mode needs no inbound port, but many hosts
-//      expect an open PORT to consider the service healthy,
-//      and uptime pingers can hit "/" to keep it awake.
-// ──────────────────────────────────────────────
-const web = express();
-web.get("/", (req, res) => res.send("Bot is running"));
-web.get("/healthz", (req, res) => res.json({ status: "ok", commands: registry.unique().length }));
-web.listen(process.env.PORT || 3000, () => {
-  logger.info("keep-alive server listening", { port: process.env.PORT || 3000 });
-  console.log("Server running on port", process.env.PORT || 3000);
-});
 
 for (const sig of ["SIGINT", "SIGTERM"]) {
   process.on(sig, async () => {

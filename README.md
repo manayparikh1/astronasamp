@@ -89,66 +89,6 @@ Cat facts are sourced from catfact.ninja
 
 All APIs are free and don't need keys at all
 
-## Run it yourself (full walkthrough)
-
-Follow these steps to get your own copy of the bot running in your own Slack workspace.
-
-**1. Prerequisites**
-
-- Node.js 18 or above (`node --version` to check)
-- A Slack workspace where you can install apps
-
-**2. Get the code**
-
-```bash
-git clone https://github.com/manayparikh1/astronasamp.git
-cd astronasamp
-npm install
-```
-
-**3. Create the Slack app**
-
-1. Go to https://api.slack.com/apps and click **Create New App**
-2. Choose **From an app manifest**, pick your workspace
-3. Paste in the contents of `slack-app-manifest.yaml` from this repo and create the app
-4. Click **Install to Workspace** and approve it
-
-**4. Get your two tokens**
-
-- **Bot token** — under **OAuth & Permissions**, copy the **Bot User OAuth Token** (starts with `xoxb-`)
-- **App token** — under **Basic Information → App-Level Tokens**, create a token with the `connections:write` scope (starts with `xapp-`)
-
-**5. Add the tokens to your environment file**
-
-```bash
-cp .env.example .env
-```
-
-Open `.env` and paste your tokens in:
-
-```
-SLACK_BOT_TOKEN=xoxb-your-token-here
-SLACK_APP_TOKEN=xapp-your-token-here
-```
-
-**6. Start the bot**
-
-```bash
-npm start
-```
-
-You should see `astronasamp is running!`. Keep this terminal open — the bot only responds while it is running (it uses Socket Mode, so no public server is needed).
-
-**7. Try it in Slack**
-
-```
-/astronasamp help
-/astronasamp weather Toronto
-/astronasamp crypto btc
-```
-
-That's it — you now have your own copy running. To stop the bot press `Ctrl+C`.
-
 ## How to run
 
 You will require Node.js 18 or above
@@ -278,14 +218,6 @@ If a token is exposed it should be changed immediately in Slack settings
 
 The bot only uses the permissions it needs such as commands and chat write access
 
-## Acknowledgments
-
-AI tools were a helpful part of my workflow while building this project. I used Claude and GitHub Copilot as assistants during development.
-
-They helped me debug issues such as the smoke test crash and various runtime errors, talked me through setup steps like getting the Slack tokens and Socket Mode connection working, and helped me understand different parts of the code structure such as the command registry, the block-building helpers, and how the commands are wired together.
-
-The design decisions, the code, and the final implementation are my own. These tools mainly acted as a faster way to learn, troubleshoot, and reason about the codebase.
-
 ## License
 
 This project is released under MIT license
@@ -295,3 +227,4 @@ This code may be freely used, modified and redistributed for any purpose, includ
 They should keep intact the copyright notice and the list of conditions for redistribution
 
 The project is provided “as is”, without warranty
+
