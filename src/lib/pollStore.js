@@ -11,6 +11,17 @@ function createPoll(question, options) {
   return id;
 }
 
+// Recreate a poll under a known id. Used to recover after a restart/redeploy
+// wiped the in-memory store, so existing poll messages keep working (counts
+// restart from zero, but voting doesn't dead-end). No-op if it already exists.
+function restorePoll(id, question, options) {
+  if (polls.has(id)) return;
+  polls.set(id, {
+    question,
+    options: options.map((label) => ({ label, voters: new Set() }))
+  });
+}
+
 function getPoll(id) {
   return polls.get(id);
 }
@@ -26,4 +37,4 @@ function toggleVote(id, optionIndex, userId) {
   return poll;
 }
 
-module.exports = { createPoll, getPoll, toggleVote };
+module.exports = { createPoll, restorePoll, getPoll, toggleVote };
